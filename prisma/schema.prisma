@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  // directUrl is required when using Neon's connection pooler
+  // directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  referralCode String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Who referred this user (nullable = no referrer)
+  referredById String?
+  referredBy   User?   @relation("ReferralChain", fields: [referredById], references: [id])
+
+  // Users this person has referred
+  referrals User[] @relation("ReferralChain")
+
+  // Clicks on this user's referral link
+  referralClicks ReferralClick[]
+
+  @@index([referralCode])
+  @@index([referredById])
+}
+
+model ReferralClick {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+}
