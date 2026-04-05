@@ -1,4 +1,5 @@
 import { PrismaClient } from "@/generated/prisma/client";
+import { LogLevel } from "@/generated/prisma/internal/prismaNamespace";
 import { PrismaPg } from "@prisma/adapter-pg";
 import "dotenv/config";
 
