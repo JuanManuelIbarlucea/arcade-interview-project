@@ -22,7 +22,7 @@ export default async function ReferralPage() {
   const session = await getSession();
   if (!session) redirect("/signin");
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const appUrl = process.env.VERCEL_URL ?? "http://localhost:3000";
 
   const [user, referrals] = await Promise.all([
     prisma.user.findUnique({

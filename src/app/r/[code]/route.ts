@@ -8,7 +8,7 @@ const REFERRAL_CODE_PATTERN = /^[0-9A-Z]{8}$/;
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const appUrl = process.env.VERCEL_URL ?? "http://localhost:3000";
   const signupUrl = new URL("/signup", appUrl);
 
   try {

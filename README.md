@@ -75,7 +75,7 @@ Edit `.env`:
 ```env
 DATABASE_URL="postgresql://..."         # Your PostgreSQL connection string
 JWT_SECRET="..."                        # Run: openssl rand -hex 32
-NEXT_PUBLIC_APP_URL="http://localhost:3000"
+VERCEL_URL="http://localhost:3000"
 ```
 
 ### 4. Apply the database schema
@@ -192,7 +192,7 @@ tests/
 3. Add these environment variables in the Vercel dashboard:
    - `DATABASE_URL` — your Neon connection string
    - `JWT_SECRET` — a 32+ char random secret (`openssl rand -hex 32`)
-   - `NEXT_PUBLIC_APP_URL` — your Vercel URL (e.g. `https://arcade-app.vercel.app`)
+   - `VERCEL_URL` — your Vercel URL (e.g. `https://arcade-app.vercel.app`)
 4. Deploy — Vercel auto-detects Next.js
 
 After deploying, run the DB migration once:
