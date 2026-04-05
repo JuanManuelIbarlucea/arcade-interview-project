@@ -25,13 +25,17 @@ export async function signToken(payload: JWTPayload): Promise<string> {
 export async function verifyToken(token: string): Promise<JWTPayload> {
   const { payload } = await jwtVerify(token, getSecret());
 
-  if (!payload.sub || !payload.email || !payload.name) {
+  if (
+    typeof payload.sub !== "string" ||
+    typeof payload.email !== "string" ||
+    typeof payload.name !== "string"
+  ) {
     throw new Error("Invalid token payload");
   }
 
   return {
     sub: payload.sub,
-    email: payload.email as string,
-    name: payload.name as string,
+    email: payload.email,
+    name: payload.name,
   };
 }

@@ -6,18 +6,24 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-50 via-white to-slate-50 flex flex-col">
-      <nav className="px-4 py-4">
-        <Link
-          href="/"
-          className="font-bold text-xl text-brand-600 hover:text-brand-700 transition-colors"
-        >
-          ArcadeApp
-        </Link>
-      </nav>
-      <div className="flex-1 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-brand-50 via-white to-slate-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 flex flex-col">
+      <header className="px-4 sm:px-6 lg:px-8 py-4">
+        <nav aria-label="Main">
+          <Link
+            href="/"
+            className="font-extrabold text-xl tracking-tight text-brand-600 hover:text-brand-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded-lg"
+            aria-label="ArcadeApp home"
+          >
+            ArcadeApp
+          </Link>
+        </nav>
+      </header>
+      <main
+        id="main-content"
+        className="flex-1 flex items-center justify-center px-4 sm:px-6 py-12"
+      >
         <div className="w-full max-w-md">{children}</div>
-      </div>
+      </main>
     </div>
   );
 }

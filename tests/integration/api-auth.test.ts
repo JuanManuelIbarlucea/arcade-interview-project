@@ -43,7 +43,6 @@ import { prisma } from "@/lib/prisma";
 
 describe("POST /api/auth/signup (stubbed)", () => {
   beforeEach(() => {
-    vi.resetAllMocks();
     vi.mocked(prisma.user.findUnique).mockResolvedValue(null);
     vi.mocked(prisma.user.create).mockResolvedValue({
       id: "user_123",

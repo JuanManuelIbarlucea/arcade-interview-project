@@ -1,12 +1,13 @@
-import { describe, expect, it } from "vitest";
-
-// Set JWT_SECRET before importing auth module
-process.env.JWT_SECRET = "test-secret-key-that-is-long-enough-32ch";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { signToken, verifyToken } from "@/lib/auth";
 
 describe("auth — signToken / verifyToken", () => {
   const payload = { sub: "user_123", email: "test@example.com", name: "Test User" };
+
+  beforeEach(() => {
+    vi.stubEnv("JWT_SECRET", "test-secret-key-that-is-long-enough-32ch");
+  });
 
   it("signToken returns a JWT string with three segments", async () => {
     const token = await signToken(payload);
@@ -36,13 +37,7 @@ describe("auth — signToken / verifyToken", () => {
 
   it("verifyToken throws when JWT_SECRET is wrong", async () => {
     const token = await signToken(payload);
-
-    // Temporarily change secret
-    const original = process.env.JWT_SECRET;
-    process.env.JWT_SECRET = "a-completely-different-secret-key-32ch";
-
+    vi.stubEnv("JWT_SECRET", "a-completely-different-secret-key-32ch");
     await expect(verifyToken(token)).rejects.toThrow();
-
-    process.env.JWT_SECRET = original;
   });
 });

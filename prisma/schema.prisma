@@ -1,12 +1,10 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  // directUrl is required when using Neon's connection pooler
-  // directUrl = env("DIRECT_URL")
+  provider = "postgresql"
 }
 
 model User {

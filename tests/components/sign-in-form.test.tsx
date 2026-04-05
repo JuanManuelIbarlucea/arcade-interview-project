@@ -2,9 +2,11 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-// Mock next/navigation
-const pushMock = vi.fn();
-const refreshMock = vi.fn();
+const { pushMock, refreshMock } = vi.hoisted(() => ({
+  pushMock: vi.fn(),
+  refreshMock: vi.fn(),
+}));
+
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: pushMock, refresh: refreshMock }),
 }));
@@ -13,8 +15,7 @@ import { SignInForm } from "@/components/auth/sign-in-form";
 
 describe("SignInForm", () => {
   beforeEach(() => {
-    vi.resetAllMocks();
-    global.fetch = vi.fn();
+    vi.stubGlobal("fetch", vi.fn());
   });
 
   it("renders email and password fields with a submit button", () => {

@@ -5,9 +5,80 @@
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    @apply bg-slate-50 text-slate-900;
+    @apply bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100;
+  }
+
+  ::selection {
+    @apply bg-brand-100 text-brand-900;
+  }
+
+  /* Visible focus indicators for keyboard navigation (WCAG 2.4.7) */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand-500;
+  }
+
+  /* Ensure focused elements clear sticky headers (WCAG 2.4.11) */
+  :focus {
+    scroll-margin-top: 5rem;
+  }
+}
+
+@layer components {
+  /* Skip link for keyboard users (WCAG 2.4.1) */
+  .skip-link {
+    @apply absolute -top-10 left-0 bg-brand-700 text-white px-4 py-2 z-50 text-sm font-medium;
+  }
+
+  .skip-link:focus {
+    @apply top-0;
+  }
+
+  /* Visually hidden but accessible to screen readers (WCAG 1.1.1) */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+@layer utilities {
+  .hover-lift {
+    @apply transition-all duration-200 ease-out;
+  }
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px -4px rgb(0 0 0 / 0.08), 0 2px 8px -2px rgb(0 0 0 / 0.04);
+  }
+  .hover-lift:active {
+    transform: translateY(0px);
+  }
+
+  .btn-press {
+    @apply transition-all duration-150 ease-out;
+  }
+  .btn-press:active {
+    transform: scale(0.97);
+  }
+}
+
+/* Respect reduced motion preference (WCAG 2.3.1) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

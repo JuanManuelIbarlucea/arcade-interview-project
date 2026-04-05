@@ -1,27 +1,33 @@
+import { Prisma } from "@/generated/prisma/client";
 import { hashPassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";
 import { generateReferralCode } from "@/lib/referral";
 import { clearRefCode, getRefCode, setSession } from "@/lib/session";
 import { type NextRequest, NextResponse } from "next/server";
 
+// TODO: Add rate limiting to prevent abuse (e.g., 3 signups per hour per IP)
+
 async function findReferredById(refCode: string | null): Promise<string | null> {
   if (!refCode) return null;
+  // Only select `id` — we don't need the full user record
   const referrer = await prisma.user.findUnique({
     where: { referralCode: refCode },
+    select: { id: true },
   });
   return referrer?.id ?? null;
 }
 
 async function generateUniqueReferralCode(): Promise<string> {
-  let code = generateReferralCode();
-  for (let attempts = 0; attempts < 5; attempts++) {
-    const collision = await prisma.user.findUnique({
+  const MAX_ATTEMPTS = 5;
+  for (let attempts = 0; attempts < MAX_ATTEMPTS; attempts++) {
+    const code = generateReferralCode();
+    // Use count instead of findUnique to avoid transferring row data — we only need existence
+    const exists = await prisma.user.count({
       where: { referralCode: code },
     });
-    if (!collision) return code;
-    code = generateReferralCode();
+    if (exists === 0) return code;
   }
-  return code;
+  throw new Error("Failed to generate a unique referral code after maximum attempts");
 }
 
 export async function POST(request: NextRequest) {
@@ -55,18 +61,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check existing email
-    const existing = await prisma.user.findUnique({
-      where: { email: email.toLowerCase() },
-    });
-
-    if (existing) {
-      return NextResponse.json(
-        { error: "An account with this email already exists", field: "email" },
-        { status: 409 }
-      );
-    }
-
     // Start hashing password immediately — it's independent of referral/code checks
     const passwordHashPromise = hashPassword(password);
 
@@ -90,6 +84,13 @@ export async function POST(request: NextRequest) {
         passwordHash,
         referralCode: newReferralCode,
         ...(referredById ? { referredById } : {}),
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        referralCode: true,
+        createdAt: true,
       },
     });
 
@@ -117,6 +118,22 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
+    // Handle Prisma unique constraint violation (race condition on email or referralCode)
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+      const target = error.meta?.target;
+      if (Array.isArray(target) && target.includes("email")) {
+        return NextResponse.json(
+          { error: "An account with this email already exists", field: "email" },
+          { status: 409 }
+        );
+      }
+      // referralCode collision — extremely unlikely but handled gracefully
+      return NextResponse.json(
+        { error: "Something went wrong. Please try again." },
+        { status: 500 }
+      );
+    }
+
     console.error("Signup error:", error);
     return NextResponse.json({ error: "Something went wrong. Please try again." }, { status: 500 });
   }

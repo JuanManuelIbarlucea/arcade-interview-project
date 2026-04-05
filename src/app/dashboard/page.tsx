@@ -4,10 +4,17 @@ import { StatsOverview } from "@/components/dashboard/stats-overview";
 import { SignOutButton } from "@/components/sign-out-button";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-export const metadata = {
-  title: "Dashboard — ArcadeApp",
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description:
+    "View your referral stats, share your unique link, and track who joined through you.",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default async function DashboardPage() {
@@ -17,14 +24,24 @@ export default async function DashboardPage() {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
   // Server-side data fetching using Prisma directly (avoiding HTTP roundtrip)
-
-  const [user, clicks, conversions, referrals] = await Promise.all([
+  // Two parallel queries instead of four: user+counts in one via _count, referrals list in another
+  const [user, referrals] = await Promise.all([
     prisma.user.findUnique({
       where: { id: session.sub },
-      select: { id: true, email: true, name: true, referralCode: true, createdAt: true },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        referralCode: true,
+        createdAt: true,
+        _count: {
+          select: {
+            referralClicks: true,
+            referrals: true,
+          },
+        },
+      },
     }),
-    prisma.referralClick.count({ where: { userId: session.sub } }),
-    prisma.user.count({ where: { referredById: session.sub } }),
     prisma.user.findMany({
       where: { referredById: session.sub },
       select: { id: true, name: true, email: true, createdAt: true },
@@ -34,6 +51,8 @@ export default async function DashboardPage() {
 
   if (!user) redirect("/signin");
 
+  const clicks = user._count.referralClicks;
+  const conversions = user._count.referrals;
   const conversionRate = clicks > 0 ? Math.round((conversions / clicks) * 1000) / 10 : 0;
 
   const referralLink = `${appUrl}/r/${user.referralCode}`;
@@ -45,26 +64,34 @@ export default async function DashboardPage() {
   }));
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
       {/* Header */}
-      <header className="bg-white border-b border-slate-100 sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <span className="font-bold text-xl text-brand-600">ArcadeApp</span>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-slate-500">
-              Hi, <span className="font-medium text-slate-900">{user.name}</span>
+      <header className="bg-white dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700 sticky top-0 z-10">
+        <nav
+          aria-label="Main"
+          className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"
+        >
+          <span className="font-extrabold text-xl tracking-tight text-brand-600">ArcadeApp</span>
+          <div className="flex items-center gap-2 sm:gap-4">
+            <span className="hidden sm:inline text-sm text-slate-500 dark:text-slate-400">
+              Hi, <span className="font-medium text-slate-900 dark:text-white">{user.name}</span>
             </span>
             <SignOutButton />
           </div>
-        </div>
+        </nav>
       </header>
 
       {/* Main content */}
-      <main className="max-w-6xl mx-auto px-4 py-10 space-y-8">
+      <main
+        id="main-content"
+        className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6 sm:space-y-10"
+      >
         {/* Welcome */}
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
-          <p className="text-slate-500 mt-1">Track your referrals and conversion performance</p>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Dashboard</h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">
+            Track your referrals and conversion performance
+          </p>
         </div>
 
         {/* Stats */}

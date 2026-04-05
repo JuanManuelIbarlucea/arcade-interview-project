@@ -1,4 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "ArcadeApp — Grow Your Network with Referral Tracking",
+  description:
+    "Share your unique referral link, track who joins, and measure your conversion rate in real time. Free referral tracking for growing networks.",
+  alternates: {
+    canonical: "/",
+  },
+};
 
 const FEATURES = [
   {
@@ -20,21 +30,30 @@ const FEATURES = [
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-slate-900">
       {/* Nav */}
-      <nav className="border-b border-slate-100 bg-white/80 backdrop-blur sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <span className="font-bold text-xl text-brand-600">ArcadeApp</span>
+      <nav
+        aria-label="Main"
+        className="border-b border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-10"
+      >
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <Link
+            href="/"
+            className="font-extrabold text-xl tracking-tight text-brand-600"
+            aria-label="ArcadeApp home"
+          >
+            ArcadeApp
+          </Link>
           <div className="flex items-center gap-3">
             <Link
               href="/signin"
-              className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors px-3 py-2"
+              className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors px-3 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
             >
               Sign In
             </Link>
             <Link
               href="/signup"
-              className="text-sm font-medium bg-brand-600 text-white rounded-lg px-4 py-2 hover:bg-brand-700 transition-colors"
+              className="text-sm font-semibold bg-brand-600 text-white rounded-lg px-4 py-2 hover:bg-brand-700 active:bg-brand-800 transition-all duration-150 btn-press shadow-sm hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
             >
               Get Started
             </Link>
@@ -43,58 +62,79 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero */}
-      <section className="max-w-6xl mx-auto px-4 pt-24 pb-20 text-center">
-        <div className="inline-flex items-center gap-2 bg-brand-50 text-brand-700 rounded-full px-4 py-1.5 text-sm font-medium mb-8">
-          <span className="w-2 h-2 bg-brand-500 rounded-full inline-block" />
-          Now in Public Beta
-        </div>
+      <main id="main-content">
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-28 pb-16 sm:pb-24 text-center">
+          <div className="inline-flex items-center gap-2 bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 rounded-full px-4 py-1.5 text-sm font-medium mb-8 border border-brand-100 dark:border-brand-800">
+            <span
+              className="w-2 h-2 bg-brand-500 rounded-full inline-block animate-pulse"
+              aria-hidden="true"
+            />
+            Now in Public Beta
+          </div>
 
-        <h1 className="text-5xl sm:text-6xl font-extrabold text-slate-900 tracking-tight mb-6 leading-tight">
-          Grow Your Network,
-          <br />
-          <span className="text-brand-600">Track Your Impact</span>
-        </h1>
+          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-6 leading-[1.1]">
+            Grow Your Network,
+            <br />
+            <span className="text-brand-600 dark:text-brand-400 bg-gradient-to-r from-brand-600 to-brand-500 dark:from-brand-400 dark:to-brand-300 bg-clip-text text-transparent">
+              Track Your Impact
+            </span>
+          </h1>
 
-        <p className="text-xl text-slate-500 max-w-2xl mx-auto mb-10">
-          Share your unique referral link. See exactly who joins. Measure your conversion rate in
-          real time.
-        </p>
+          <p className="text-lg sm:text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto mb-12 leading-relaxed">
+            Share your unique referral link. See exactly who joins. Measure your conversion rate in
+            real time.
+          </p>
 
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link
-            href="/signup"
-            className="bg-brand-600 text-white font-semibold rounded-xl px-8 py-4 text-lg hover:bg-brand-700 transition-colors shadow-lg shadow-brand-200"
-          >
-            Start for Free
-          </Link>
-          <Link
-            href="/signin"
-            className="border border-slate-200 text-slate-700 font-semibold rounded-xl px-8 py-4 text-lg hover:bg-slate-50 transition-colors"
-          >
-            Sign In
-          </Link>
-        </div>
-      </section>
-
-      {/* Features */}
-      <section className="max-w-6xl mx-auto px-4 pb-24">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          {FEATURES.map((f) => (
-            <div
-              key={f.title}
-              className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm"
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/signup"
+              className="bg-brand-600 text-white font-semibold rounded-xl px-8 py-4 text-lg hover:bg-brand-700 active:bg-brand-800 transition-all duration-200 shadow-lg shadow-brand-200/50 dark:shadow-none hover:shadow-xl hover:shadow-brand-200/60 btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
             >
-              <div className="text-3xl mb-3">{f.icon}</div>
-              <h3 className="font-semibold text-slate-900 mb-2">{f.title}</h3>
-              <p className="text-sm text-slate-500">{f.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+              Start for Free
+            </Link>
+            <Link
+              href="/signin"
+              className="border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-semibold rounded-xl px-8 py-4 text-lg hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-300 active:bg-slate-100 transition-all duration-200 btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
+            >
+              Sign In
+            </Link>
+          </div>
+        </section>
+
+        {/* Features */}
+        <section
+          className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-28"
+          aria-labelledby="features-heading"
+        >
+          <h2 id="features-heading" className="sr-only">
+            Features
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {FEATURES.map((f) => (
+              <div
+                key={f.title}
+                className="bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl p-7 shadow-sm hover-lift group"
+              >
+                <div
+                  className="text-3xl mb-4 transition-transform duration-200 group-hover:scale-110"
+                  aria-hidden="true"
+                >
+                  {f.icon}
+                </div>
+                <h3 className="font-bold text-slate-900 dark:text-white mb-2">{f.title}</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                  {f.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+      </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-100 py-8 text-center text-sm text-slate-400">
-        ArcadeApp &mdash; Built for the Arcade Engineering Interview
+      <footer className="border-t border-slate-100 dark:border-slate-800 py-10 text-center text-sm text-slate-400 dark:text-slate-500">
+        <span className="font-semibold text-slate-500 dark:text-slate-400">ArcadeApp</span> &mdash;
+        Built for the Arcade Engineering Interview
       </footer>
     </div>
   );

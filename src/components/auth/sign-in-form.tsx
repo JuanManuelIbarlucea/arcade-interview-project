@@ -3,6 +3,9 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
+const inputClasses =
+  "w-full border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 rounded-lg px-3.5 py-2.5 text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 hover:border-slate-300 dark:hover:border-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:border-transparent transition-all duration-200 motion-reduce:transition-none";
+
 export function SignInForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -38,10 +41,11 @@ export function SignInForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4" data-testid="signin-form">
+    <form onSubmit={handleSubmit} className="space-y-4" data-testid="signin-form" noValidate>
       {error && (
         <div
-          className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm"
+          id="signin-error"
+          className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-lg px-4 py-3 text-sm"
           role="alert"
         >
           {error}
@@ -49,33 +53,43 @@ export function SignInForm() {
       )}
 
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1.5">
+        <label
+          htmlFor="signin-email"
+          className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5"
+        >
           Email address
         </label>
         <input
-          id="email"
+          id="signin-email"
           type="email"
           autoComplete="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full border border-slate-200 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
+          aria-invalid={error ? "true" : undefined}
+          aria-describedby={error ? "signin-error" : undefined}
+          className={inputClasses}
           placeholder="you@example.com"
         />
       </div>
 
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-1.5">
+        <label
+          htmlFor="signin-password"
+          className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5"
+        >
           Password
         </label>
         <input
-          id="password"
+          id="signin-password"
           type="password"
           autoComplete="current-password"
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full border border-slate-200 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition"
+          aria-invalid={error ? "true" : undefined}
+          aria-describedby={error ? "signin-error" : undefined}
+          className={inputClasses}
           placeholder="••••••••"
         />
       </div>
@@ -83,7 +97,7 @@ export function SignInForm() {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full bg-brand-600 text-white font-semibold rounded-lg py-2.5 text-sm hover:bg-brand-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed mt-2"
+        className="w-full bg-brand-600 text-white font-semibold rounded-lg py-2.5 text-sm hover:bg-brand-700 active:bg-brand-800 transition-all duration-150 motion-reduce:transition-none disabled:opacity-60 disabled:cursor-not-allowed mt-2 btn-press shadow-sm hover:shadow-md disabled:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-800"
       >
         {isPending ? "Signing in..." : "Sign In"}
       </button>
