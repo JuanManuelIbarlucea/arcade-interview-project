@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { getAppUrl } from "@/lib/app-url";
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
 
 const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"] });
 
-const APP_URL = process.env.VERCEL_URL ?? "http://localhost:3000";
+const APP_URL = getAppUrl();
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),

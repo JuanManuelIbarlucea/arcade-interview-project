@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
+import { getAppUrl } from "@/lib/app-url";
 
-const APP_URL = process.env.VERCEL_URL ?? "http://localhost:3000";
+const APP_URL = getAppUrl();
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

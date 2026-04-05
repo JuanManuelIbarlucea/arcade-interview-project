@@ -1,3 +1,4 @@
+import { getAppUrl } from "@/lib/app-url";
 import { prisma } from "@/lib/prisma";
 import { REF_COOKIE } from "@/lib/session";
 import { after } from "next/server";
@@ -8,7 +9,7 @@ const REFERRAL_CODE_PATTERN = /^[0-9A-Z]{8}$/;
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
-  const appUrl = process.env.VERCEL_URL ?? "http://localhost:3000";
+  const appUrl = getAppUrl();
   const signupUrl = new URL("/signup", appUrl);
 
   try {

@@ -2,6 +2,7 @@ import { ReferralLinkCard } from "@/components/dashboard/referral-link-card";
 import { ReferralsTable } from "@/components/dashboard/referrals-table";
 import { StatsOverview } from "@/components/dashboard/stats-overview";
 import { SignOutButton } from "@/components/sign-out-button";
+import { getAppUrl } from "@/lib/app-url";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 import type { Metadata } from "next";
@@ -22,7 +23,7 @@ export default async function ReferralPage() {
   const session = await getSession();
   if (!session) redirect("/signin");
 
-  const appUrl = process.env.VERCEL_URL ?? "http://localhost:3000";
+  const appUrl = getAppUrl();
 
   const [user, referrals] = await Promise.all([
     prisma.user.findUnique({
