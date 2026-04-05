@@ -4,10 +4,24 @@ import { generateReferralCode } from "@/lib/referral";
 import { clearRefCode, getRefCode, setSession } from "@/lib/session";
 import { type NextRequest, NextResponse } from "next/server";
 
-function maskEmail(email: string): string {
-  const [local, domain] = email.split("@");
-  if (local.length <= 2) return `${local[0]}***@${domain}`;
-  return `${local[0]}***@${domain}`;
+async function findReferredById(refCode: string | null): Promise<string | null> {
+  if (!refCode) return null;
+  const referrer = await prisma.user.findUnique({
+    where: { referralCode: refCode },
+  });
+  return referrer?.id ?? null;
+}
+
+async function generateUniqueReferralCode(): Promise<string> {
+  let code = generateReferralCode();
+  for (let attempts = 0; attempts < 5; attempts++) {
+    const collision = await prisma.user.findUnique({
+      where: { referralCode: code },
+    });
+    if (!collision) return code;
+    code = generateReferralCode();
+  }
+  return code;
 }
 
 export async function POST(request: NextRequest) {
@@ -53,36 +67,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Start hashing password immediately — it's independent of referral/code checks
+    const passwordHashPromise = hashPassword(password);
+
     // Read referral code from cookie (set by /r/[code] redirect)
     // Falls back to query param in case cookie wasn't set
     const refCodeFromCookie = await getRefCode();
     const refCodeFromBody = body.refCode;
     const refCode = refCodeFromCookie ?? refCodeFromBody ?? null;
 
-    let referredById: string | null = null;
-
-    if (refCode) {
-      const referrer = await prisma.user.findUnique({
-        where: { referralCode: refCode },
-      });
-      if (referrer) {
-        referredById = referrer.id;
-      }
-    }
-
-    // Generate a unique referral code with collision retry
-    let newReferralCode = generateReferralCode();
-    let attempts = 0;
-    while (attempts < 5) {
-      const collision = await prisma.user.findUnique({
-        where: { referralCode: newReferralCode },
-      });
-      if (!collision) break;
-      newReferralCode = generateReferralCode();
-      attempts++;
-    }
-
-    const passwordHash = await hashPassword(password);
+    // Resolve referrer lookup, unique referral code generation, and password hashing in parallel
+    const [referredById, newReferralCode, passwordHash] = await Promise.all([
+      findReferredById(refCode),
+      generateUniqueReferralCode(),
+      passwordHashPromise,
+    ]);
 
     const user = await prisma.user.create({
       data: {

@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { REF_COOKIE } from "@/lib/session";
-import { headers } from "next/headers";
+import { after } from "next/server";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ code: string }> }) {
@@ -18,20 +18,23 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     return NextResponse.redirect(new URL("/signup", appUrl));
   }
 
-  // Record the click
-  const headersList = await headers();
+  // Capture request metadata before the response is sent
   const ip =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     request.headers.get("x-real-ip") ??
     null;
-  const userAgent = headersList.get("user-agent") ?? null;
+  const userAgent = request.headers.get("user-agent") ?? null;
+  const referrerId = referrer.id;
 
-  await prisma.referralClick.create({
-    data: {
-      userId: referrer.id,
-      ip,
-      userAgent,
-    },
+  // Record the click after the redirect response is sent (non-blocking)
+  after(async () => {
+    await prisma.referralClick.create({
+      data: {
+        userId: referrerId,
+        ip,
+        userAgent,
+      },
+    });
   });
 
   // Set a short-lived cookie to carry the referral code through to signup

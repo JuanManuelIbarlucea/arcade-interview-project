@@ -2,47 +2,13 @@ import { ReferralLinkCard } from "@/components/dashboard/referral-link-card";
 import { ReferralsTable } from "@/components/dashboard/referrals-table";
 import { StatsOverview } from "@/components/dashboard/stats-overview";
 import { SignOutButton } from "@/components/sign-out-button";
+import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
-import type { MeResponse, ReferredUser } from "@/types";
 import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "Dashboard — ArcadeApp",
 };
-
-async function getDashboardData(): Promise<{
-  me: MeResponse;
-  referrals: ReferredUser[];
-}> {
-  const session = await getSession();
-  if (!session) redirect("/signin");
-
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-
-  const [meRes, referralsRes] = await Promise.all([
-    fetch(`${appUrl}/api/me`, {
-      headers: { Cookie: `session=${await getSessionToken()}` },
-      cache: "no-store",
-    }),
-    fetch(`${appUrl}/api/referrals`, {
-      headers: { Cookie: `session=${await getSessionToken()}` },
-      cache: "no-store",
-    }),
-  ]);
-
-  if (!meRes.ok) redirect("/signin");
-
-  const me = (await meRes.json()) as MeResponse;
-  const referralsData = await referralsRes.json();
-
-  return { me, referrals: referralsData.referrals ?? [] };
-}
-
-async function getSessionToken(): Promise<string> {
-  const { cookies } = await import("next/headers");
-  const cookieStore = await cookies();
-  return cookieStore.get("session")?.value ?? "";
-}
 
 export default async function DashboardPage() {
   const session = await getSession();
@@ -51,7 +17,6 @@ export default async function DashboardPage() {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
   // Server-side data fetching using Prisma directly (avoiding HTTP roundtrip)
-  const { prisma } = await import("@/lib/prisma");
 
   const [user, clicks, conversions, referrals] = await Promise.all([
     prisma.user.findUnique({

@@ -1,41 +1,40 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 
 export function SignInForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-    setLoading(true);
 
-    try {
-      const res = await fetch("/api/auth/signin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+    startTransition(async () => {
+      try {
+        const res = await fetch("/api/auth/signin", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
 
-      const data = await res.json();
+        const data = await res.json();
 
-      if (!res.ok) {
-        setError(data.error ?? "Sign in failed. Please try again.");
-        return;
+        if (!res.ok) {
+          setError(data.error ?? "Sign in failed. Please try again.");
+          return;
+        }
+
+        router.push("/dashboard");
+        router.refresh();
+      } catch {
+        setError("Something went wrong. Please try again.");
       }
-
-      router.push("/dashboard");
-      router.refresh();
-    } catch {
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    });
   }
 
   return (
@@ -83,10 +82,10 @@ export function SignInForm() {
 
       <button
         type="submit"
-        disabled={loading}
+        disabled={isPending}
         className="w-full bg-brand-600 text-white font-semibold rounded-lg py-2.5 text-sm hover:bg-brand-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed mt-2"
       >
-        {loading ? "Signing in..." : "Sign In"}
+        {isPending ? "Signing in..." : "Sign In"}
       </button>
     </form>
   );

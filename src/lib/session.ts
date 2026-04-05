@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { cache } from "react";
 import { type JWTPayload, signToken, verifyToken } from "./auth";
 
 export const SESSION_COOKIE = "session";
@@ -20,7 +21,7 @@ export async function setSession(payload: JWTPayload): Promise<void> {
   });
 }
 
-export async function getSession(): Promise<JWTPayload | null> {
+export const getSession = cache(async (): Promise<JWTPayload | null> => {
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE)?.value;
   if (!token) return null;
@@ -30,7 +31,7 @@ export async function getSession(): Promise<JWTPayload | null> {
   } catch {
     return null;
   }
-}
+});
 
 export async function clearSession(): Promise<void> {
   const cookieStore = await cookies();

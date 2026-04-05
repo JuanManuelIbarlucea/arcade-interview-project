@@ -1,5 +1,23 @@
 import Link from "next/link";
 
+const FEATURES = [
+  {
+    icon: "🔗",
+    title: "Your Unique Link",
+    desc: "Every account gets a personal referral link you can share anywhere.",
+  },
+  {
+    icon: "📊",
+    title: "Real-Time Analytics",
+    desc: "Track clicks and sign-ups. See your conversion rate update live.",
+  },
+  {
+    icon: "👥",
+    title: "Full Attribution",
+    desc: "Know exactly which friend joined through your link and when.",
+  },
+] as const;
+
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-white">
@@ -61,23 +79,7 @@ export default function LandingPage() {
       {/* Features */}
       <section className="max-w-6xl mx-auto px-4 pb-24">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          {[
-            {
-              icon: "🔗",
-              title: "Your Unique Link",
-              desc: "Every account gets a personal referral link you can share anywhere.",
-            },
-            {
-              icon: "📊",
-              title: "Real-Time Analytics",
-              desc: "Track clicks and sign-ups. See your conversion rate update live.",
-            },
-            {
-              icon: "👥",
-              title: "Full Attribution",
-              desc: "Know exactly which friend joined through your link and when.",
-            },
-          ].map((f) => (
+          {FEATURES.map((f) => (
             <div
               key={f.title}
               className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm"

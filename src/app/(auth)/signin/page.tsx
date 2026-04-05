@@ -1,7 +1,8 @@
 import { SignInForm } from "@/components/auth/sign-in-form";
+import type { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Sign In — ArcadeApp",
 };
 

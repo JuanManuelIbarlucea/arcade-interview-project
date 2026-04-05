@@ -17,7 +17,7 @@ The project requirements were provided verbatim from the interview:
 
 > Build a new web app for a fictional product. The application should include a user-management system that allows users to sign up/in, and invite their friends. Be sure that you can track the conversion rates of our new users, and attribute them back to the referring friend.
 
-Claude was asked to plan the architecture before writing any code. The planning phase produced:
+Claude was asked to help plan the architecture before writing any code. The planning phase produced:
 - File structure
 - Database schema (Prisma models)
 - API routes design

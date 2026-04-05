@@ -1,26 +1,28 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useTransition } from "react";
 
 export function SignOutButton() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
-  async function handleSignOut() {
-    setLoading(true);
-    await fetch("/api/auth/signout", { method: "POST" });
-    router.push("/");
-    router.refresh();
+  function handleSignOut() {
+    startTransition(async () => {
+      await fetch("/api/auth/signout", { method: "POST" });
+      router.push("/");
+      router.refresh();
+    });
   }
 
   return (
     <button
+      type="button"
       onClick={handleSignOut}
-      disabled={loading}
+      disabled={isPending}
       className="text-sm text-slate-500 hover:text-slate-900 transition-colors disabled:opacity-60"
     >
-      {loading ? "..." : "Sign Out"}
+      {isPending ? "..." : "Sign Out"}
     </button>
   );
 }

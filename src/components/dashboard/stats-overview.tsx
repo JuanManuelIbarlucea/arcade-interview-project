@@ -4,32 +4,35 @@ interface StatsOverviewProps {
   conversionRate: number;
 }
 
+const STAT_META = [
+  {
+    label: "Link Clicks",
+    description: "Total times your referral link was clicked",
+    color: "text-blue-600",
+    bg: "bg-blue-50",
+    icon: "🔗",
+  },
+  {
+    label: "Conversions",
+    description: "People who signed up via your link",
+    color: "text-emerald-600",
+    bg: "bg-emerald-50",
+    icon: "✅",
+  },
+  {
+    label: "Conversion Rate",
+    description: "Percentage of clicks that led to sign-ups",
+    color: "text-violet-600",
+    bg: "bg-violet-50",
+    icon: "📈",
+  },
+] as const;
+
 export function StatsOverview({ clicks, conversions, conversionRate }: StatsOverviewProps) {
   const stats = [
-    {
-      label: "Link Clicks",
-      value: clicks.toLocaleString(),
-      description: "Total times your referral link was clicked",
-      color: "text-blue-600",
-      bg: "bg-blue-50",
-      icon: "🔗",
-    },
-    {
-      label: "Conversions",
-      value: conversions.toLocaleString(),
-      description: "People who signed up via your link",
-      color: "text-emerald-600",
-      bg: "bg-emerald-50",
-      icon: "✅",
-    },
-    {
-      label: "Conversion Rate",
-      value: `${conversionRate}%`,
-      description: "Percentage of clicks that led to sign-ups",
-      color: "text-violet-600",
-      bg: "bg-violet-50",
-      icon: "📈",
-    },
+    { ...STAT_META[0], value: clicks.toLocaleString() },
+    { ...STAT_META[1], value: conversions.toLocaleString() },
+    { ...STAT_META[2], value: `${conversionRate}%` },
   ];
 
   return (

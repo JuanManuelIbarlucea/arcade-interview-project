@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useState, useTransition } from "react";
 
 function SignUpFormInner() {
   const router = useRouter();
@@ -13,7 +13,7 @@ function SignUpFormInner() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [serverError, setServerError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   function validate(): boolean {
     const newErrors: Record<string, string> = {};
@@ -32,44 +32,42 @@ function SignUpFormInner() {
     return Object.keys(newErrors).length === 0;
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setServerError(null);
 
     if (!validate()) return;
 
-    setLoading(true);
+    startTransition(async () => {
+      try {
+        const res = await fetch("/api/auth/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name,
+            email,
+            password,
+            ...(refFromUrl ? { refCode: refFromUrl } : {}),
+          }),
+        });
 
-    try {
-      const res = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-          ...(refFromUrl ? { refCode: refFromUrl } : {}),
-        }),
-      });
+        const data = await res.json();
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        if (data.field) {
-          setErrors({ [data.field]: data.error });
-        } else {
-          setServerError(data.error ?? "Sign up failed. Please try again.");
+        if (!res.ok) {
+          if (data.field) {
+            setErrors({ [data.field]: data.error });
+          } else {
+            setServerError(data.error ?? "Sign up failed. Please try again.");
+          }
+          return;
         }
-        return;
-      }
 
-      router.push("/dashboard");
-      router.refresh();
-    } catch {
-      setServerError("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+        router.push("/dashboard");
+        router.refresh();
+      } catch {
+        setServerError("Something went wrong. Please try again.");
+      }
+    });
   }
 
   return (
@@ -154,10 +152,10 @@ function SignUpFormInner() {
 
       <button
         type="submit"
-        disabled={loading}
+        disabled={isPending}
         className="w-full bg-brand-600 text-white font-semibold rounded-lg py-2.5 text-sm hover:bg-brand-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed mt-2"
       >
-        {loading ? "Creating account..." : "Create Account"}
+        {isPending ? "Creating account..." : "Create Account"}
       </button>
     </form>
   );

@@ -47,6 +47,7 @@ export function ReferralLinkCard({ referralLink, referralCode }: ReferralLinkCar
           {referralLink}
         </div>
         <button
+          type="button"
           onClick={copyToClipboard}
           className={`shrink-0 font-medium text-sm rounded-lg px-4 py-2.5 transition-all ${
             copied
