@@ -5,7 +5,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Sign Up",
   description:
-    "Create a free ArcadeApp account to get your unique referral link and start tracking sign-ups.",
+    "Create a free VaultPay account to start managing your money with instant transfers and smart savings.",
   robots: {
     index: false,
     follow: true,
@@ -21,7 +21,7 @@ export default function SignUpPage() {
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Create an account</h1>
         <p className="text-slate-500 dark:text-slate-400 mt-1">
-          Join ArcadeApp and start tracking your referrals
+          Join VaultPay and start managing your money
         </p>
       </div>
 

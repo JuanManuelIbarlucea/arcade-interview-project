@@ -9,11 +9,11 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
   title: {
-    default: "ArcadeApp — Grow Your Network with Referral Tracking",
-    template: "%s | ArcadeApp",
+    default: "VaultPay — Smart Money Management for Everyone",
+    template: "%s | VaultPay",
   },
   description:
-    "Share your unique referral link, track who joins, and measure your conversion rate in real time. Free referral tracking for growing networks.",
+    "Send, save, and grow your money with VaultPay. Instant transfers, high-yield savings vaults, and smart budgeting tools — all in one app.",
   robots: {
     index: true,
     follow: true,
@@ -22,17 +22,17 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    siteName: "ArcadeApp",
-    title: "ArcadeApp — Grow Your Network with Referral Tracking",
+    siteName: "VaultPay",
+    title: "VaultPay — Smart Money Management for Everyone",
     description:
-      "Share your unique referral link, track who joins, and measure your conversion rate in real time.",
+      "Send, save, and grow your money with VaultPay. Instant transfers, high-yield savings vaults, and smart budgeting tools.",
     url: APP_URL,
   },
   twitter: {
     card: "summary_large_image",
-    title: "ArcadeApp — Grow Your Network with Referral Tracking",
+    title: "VaultPay — Smart Money Management for Everyone",
     description:
-      "Share your unique referral link, track who joins, and measure your conversion rate in real time.",
+      "Send, save, and grow your money with VaultPay. Instant transfers, high-yield savings vaults, and smart budgeting tools.",
   },
   alternates: {
     canonical: "/",
@@ -61,11 +61,11 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebApplication",
-              name: "ArcadeApp",
+              name: "VaultPay",
               url: APP_URL,
-              applicationCategory: "BusinessApplication",
+              applicationCategory: "FinanceApplication",
               description:
-                "Share your unique referral link, track who joins, and measure your conversion rate in real time.",
+                "Send, save, and grow your money with VaultPay. Instant transfers, high-yield savings vaults, and smart budgeting tools.",
               offers: {
                 "@type": "Offer",
                 price: "0",

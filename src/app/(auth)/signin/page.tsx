@@ -4,8 +4,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Sign In",
-  description:
-    "Sign in to your ArcadeApp account to manage referrals and track your network growth.",
+  description: "Sign in to your VaultPay account to manage your money, savings, and transfers.",
   robots: {
     index: false,
     follow: true,
@@ -20,7 +19,7 @@ export default function SignInPage() {
     <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-700 p-6 sm:p-10">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Welcome back</h1>
-        <p className="text-slate-500 dark:text-slate-400 mt-1">Sign in to your ArcadeApp account</p>
+        <p className="text-slate-500 dark:text-slate-400 mt-1">Sign in to your VaultPay account</p>
       </div>
 
       <SignInForm />

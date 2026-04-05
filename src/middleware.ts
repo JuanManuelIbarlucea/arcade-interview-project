@@ -2,7 +2,7 @@ import { jwtVerify } from "jose";
 import { type NextRequest, NextResponse } from "next/server";
 import { SESSION_COOKIE } from "./lib/session";
 
-const PROTECTED_PATHS = ["/dashboard"];
+const PROTECTED_PATHS = ["/dashboard", "/referral"];
 const AUTH_PATHS = ["/signin", "/signup"];
 
 function getSecret(): Uint8Array {

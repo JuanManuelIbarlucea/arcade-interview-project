@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "ArcadeApp — Grow Your Network with Referral Tracking",
+  title: "VaultPay — Smart Money Management for Everyone",
   description:
-    "Share your unique referral link, track who joins, and measure your conversion rate in real time. Free referral tracking for growing networks.",
+    "Send, save, and grow your money with VaultPay. Instant transfers, high-yield savings vaults, and smart budgeting tools — all in one app.",
   alternates: {
     canonical: "/",
   },
@@ -12,19 +12,19 @@ export const metadata: Metadata = {
 
 const FEATURES = [
   {
-    icon: "🔗",
-    title: "Your Unique Link",
-    desc: "Every account gets a personal referral link you can share anywhere.",
+    icon: "💸",
+    title: "Instant Transfers",
+    desc: "Send money to anyone in seconds. No fees, no waiting — just tap and done.",
+  },
+  {
+    icon: "🏦",
+    title: "Smart Savings Vaults",
+    desc: "Earn 4.5% APY on your savings. Set goals, automate deposits, watch your money grow.",
   },
   {
     icon: "📊",
-    title: "Real-Time Analytics",
-    desc: "Track clicks and sign-ups. See your conversion rate update live.",
-  },
-  {
-    icon: "👥",
-    title: "Full Attribution",
-    desc: "Know exactly which friend joined through your link and when.",
+    title: "Budget Insights",
+    desc: "See where your money goes with real-time spending analytics and smart categories.",
   },
 ] as const;
 
@@ -40,9 +40,9 @@ export default function LandingPage() {
           <Link
             href="/"
             className="font-extrabold text-xl tracking-tight text-brand-600"
-            aria-label="ArcadeApp home"
+            aria-label="VaultPay home"
           >
-            ArcadeApp
+            VaultPay
           </Link>
           <div className="flex items-center gap-3">
             <Link
@@ -73,16 +73,16 @@ export default function LandingPage() {
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-6 leading-[1.1]">
-            Grow Your Network,
+            Your Money,
             <br />
             <span className="text-brand-600 dark:text-brand-400 bg-gradient-to-r from-brand-600 to-brand-500 dark:from-brand-400 dark:to-brand-300 bg-clip-text text-transparent">
-              Track Your Impact
+              Your Vault
             </span>
           </h1>
 
           <p className="text-lg sm:text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto mb-12 leading-relaxed">
-            Share your unique referral link. See exactly who joins. Measure your conversion rate in
-            real time.
+            Send, save, and grow your money — all in one place. Smart budgeting, high-yield savings,
+            and instant transfers with zero fees.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -90,7 +90,7 @@ export default function LandingPage() {
               href="/signup"
               className="bg-brand-600 text-white font-semibold rounded-xl px-8 py-4 text-lg hover:bg-brand-700 active:bg-brand-800 transition-all duration-200 shadow-lg shadow-brand-200/50 dark:shadow-none hover:shadow-xl hover:shadow-brand-200/60 btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
             >
-              Start for Free
+              Open Your Vault
             </Link>
             <Link
               href="/signin"
@@ -133,7 +133,7 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="border-t border-slate-100 dark:border-slate-800 py-10 text-center text-sm text-slate-400 dark:text-slate-500">
-        <span className="font-semibold text-slate-500 dark:text-slate-400">ArcadeApp</span> &mdash;
+        <span className="font-semibold text-slate-500 dark:text-slate-400">VaultPay</span> &mdash;
         Built for the Arcade Engineering Interview
       </footer>
     </div>

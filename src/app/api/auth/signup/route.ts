@@ -118,16 +118,22 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    // Handle Prisma unique constraint violation (race condition on email or referralCode)
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
-      const target = error.meta?.target;
-      if (Array.isArray(target) && target.includes("email")) {
+      const meta = error.meta as {
+        target?: unknown;
+        driverAdapterError?: { cause?: { constraint?: { fields?: string[] } } };
+      };
+      const legacyTarget = meta?.target;
+      const legacyFields =
+        Array.isArray(legacyTarget) ? legacyTarget : legacyTarget != null ? [legacyTarget] : [];
+      const adapterFields = meta?.driverAdapterError?.cause?.constraint?.fields ?? [];
+      const conflictFields = [...legacyFields.map(String), ...adapterFields];
+      if (conflictFields.includes("email")) {
         return NextResponse.json(
           { error: "An account with this email already exists", field: "email" },
           { status: 409 }
         );
       }
-      // referralCode collision — extremely unlikely but handled gracefully
       return NextResponse.json(
         { error: "Something went wrong. Please try again." },
         { status: 500 }

@@ -12,9 +12,9 @@ export default function AuthLayout({
           <Link
             href="/"
             className="font-extrabold text-xl tracking-tight text-brand-600 hover:text-brand-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded-lg"
-            aria-label="ArcadeApp home"
+            aria-label="VaultPay home"
           >
-            ArcadeApp
+            VaultPay
           </Link>
         </nav>
       </header>
